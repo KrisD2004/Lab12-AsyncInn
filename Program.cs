@@ -16,7 +16,7 @@ namespace Lab2_AysncInn
 
             var app = builder.Build();
 
-            //app.MapGet("/", () => "Hello World!");
+            app.MapGet("/", () => "Hello World!");
 
 
             app.UseHttpsRedirection();

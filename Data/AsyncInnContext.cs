@@ -45,5 +45,15 @@ namespace Lab2_AysncInn.Data
 
 
         }
+
+        public DbSet<Lab2_AysncInn.Models.Hotel> Hotel { get; set; } = default!;
+
+        public DbSet<Lab2_AysncInn.Models.HotelRoom> HotelRoom { get; set; } = default!;
+
+        public DbSet<Lab2_AysncInn.Models.Room> Room { get; set; } = default!;
+
+        public DbSet<Lab2_AysncInn.Models.RoomAmenity> RoomAmenity { get; set; } = default!;
+
+        public DbSet<Lab2_AysncInn.Models.Amenity> Amenity { get; set; } = default!;
     }
 }
