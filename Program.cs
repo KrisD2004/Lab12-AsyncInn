@@ -15,7 +15,7 @@ namespace Lab2_AysncInn
             builder.Services.AddDbContext<AsyncInnContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
-
+            //printing message to see if it works
             app.MapGet("/", () => "Hello World!");
 
 
