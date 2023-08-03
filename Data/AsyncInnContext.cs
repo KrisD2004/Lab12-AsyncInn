@@ -124,6 +124,7 @@ namespace Lab2_AysncInn.Data
             });
 
 
+
         }
 
         public DbSet<Lab2_AysncInn.Models.Hotel> Hotel { get; set; } = default!;

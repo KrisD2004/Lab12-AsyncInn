@@ -34,7 +34,7 @@ namespace Lab2_AysncInn.Controller
             return await _context.Hotel.ToListAsync();
         }
 
-        // GET: api/Hotels/5
+        // GET:             
         [HttpGet("{id}")]
         public async Task<ActionResult<Hotel>> GetHotel(int id)
         {
