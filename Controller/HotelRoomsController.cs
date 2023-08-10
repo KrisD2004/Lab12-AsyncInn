@@ -49,7 +49,7 @@ namespace Lab2_AysncInn.Controller
           
         }
 
-        //new route to find specifc room
+        //new route to GET all the rooms for a hotel
         // route added for lab 14
         [HttpGet]
         [Route("/api/Hotels/{hotelId}/Rooms/{roomID}")]
@@ -235,7 +235,7 @@ namespace Lab2_AysncInn.Controller
             return NoContent();
         }
 
-        // new delete route to delete specifc hotel
+        // new delete route to delete specifc room from a hotel
         [HttpDelete]
         [Route("/api/Hotels/{hotelId}/Rooms/{roomID}")]
         public async Task<IActionResult> DeleteSpecificRoom(int hotelId, int roomID)
