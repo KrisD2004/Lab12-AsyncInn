@@ -8,5 +8,7 @@ namespace Lab2_AysncInn.Models
 
         [Required]
         public string Name { get; set; }
+
+        public List <RoomAmenity> RoomAmenities { get; set; }
     }
 }
