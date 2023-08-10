@@ -16,5 +16,7 @@ namespace Lab2_AysncInn.Models
         public string State { get; set; }
         [Required]
         public string Phone { get; set; }
+
+        public List<HotelRoom> HotelRooms { get; set; }
     }
 }

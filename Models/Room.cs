@@ -9,5 +9,10 @@ namespace Lab2_AysncInn.Models
         public string Name { get; set; }
         [Required]
         public int Layout { get; set; }
+
+        public List<HotelRoom> hotelRooms { get; set; }
+
+        public List<RoomAmenity> RoomAmenities { get; set; }
+
     }
 }

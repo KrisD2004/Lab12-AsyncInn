@@ -3,6 +3,7 @@ using Lab2_AysncInn.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Lab2_AysncInn.Migrations
 {
     [DbContext(typeof(AsyncInnContext))]
-    partial class AsyncInnContextModelSnapshot : ModelSnapshot
+    [Migration("20230809183903_ChangingAgain")]
+    partial class ChangingAgain
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,23 +39,6 @@ namespace Lab2_AysncInn.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Amenity");
-
-                    b.HasData(
-                        new
-                        {
-                            ID = 1,
-                            Name = "A/C"
-                        },
-                        new
-                        {
-                            ID = 2,
-                            Name = "Free Wi-Fi"
-                        },
-                        new
-                        {
-                            ID = 3,
-                            Name = "Swimming Pool"
-                        });
                 });
 
             modelBuilder.Entity("Lab2_AysncInn.Models.Hotel", b =>
@@ -86,35 +72,6 @@ namespace Lab2_AysncInn.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Hotel");
-
-                    b.HasData(
-                        new
-                        {
-                            ID = 1,
-                            Address = "123 Seasame St",
-                            City = "Memphis",
-                            Name = "Elmo Hotel",
-                            Phone = "555-888-8888",
-                            State = "TN"
-                        },
-                        new
-                        {
-                            ID = 2,
-                            Address = "456 Oak St",
-                            City = "New York",
-                            Name = "Central Hotel",
-                            Phone = "555-999-9999",
-                            State = "NY"
-                        },
-                        new
-                        {
-                            ID = 3,
-                            Address = "789 Pine St",
-                            City = "Los Angeles",
-                            Name = "Sunset Hotel",
-                            Phone = "555-777-7777",
-                            State = "CA"
-                        });
                 });
 
             modelBuilder.Entity("Lab2_AysncInn.Models.HotelRoom", b =>
@@ -129,6 +86,7 @@ namespace Lab2_AysncInn.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Price")
@@ -144,29 +102,6 @@ namespace Lab2_AysncInn.Migrations
                     b.HasIndex("RoomID");
 
                     b.ToTable("HotelRoom");
-
-                    b.HasData(
-                        new
-                        {
-                            ID = 1,
-                            HotelID = 1,
-                            Price = 100.78,
-                            RoomID = 1
-                        },
-                        new
-                        {
-                            ID = 2,
-                            HotelID = 1,
-                            Price = 150.99000000000001,
-                            RoomID = 2
-                        },
-                        new
-                        {
-                            ID = 3,
-                            HotelID = 3,
-                            Price = 180.0,
-                            RoomID = 3
-                        });
                 });
 
             modelBuilder.Entity("Lab2_AysncInn.Models.Room", b =>
@@ -187,26 +122,6 @@ namespace Lab2_AysncInn.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Room");
-
-                    b.HasData(
-                        new
-                        {
-                            ID = 1,
-                            Layout = 0,
-                            Name = "Basic Room"
-                        },
-                        new
-                        {
-                            ID = 2,
-                            Layout = 1,
-                            Name = "Deluxe Room"
-                        },
-                        new
-                        {
-                            ID = 3,
-                            Layout = 2,
-                            Name = "Suite Room"
-                        });
                 });
 
             modelBuilder.Entity("Lab2_AysncInn.Models.RoomAmenity", b =>
@@ -230,26 +145,6 @@ namespace Lab2_AysncInn.Migrations
                     b.HasIndex("RoomID");
 
                     b.ToTable("RoomAmenity");
-
-                    b.HasData(
-                        new
-                        {
-                            ID = 1,
-                            AmenityID = 1,
-                            RoomID = 1
-                        },
-                        new
-                        {
-                            ID = 2,
-                            AmenityID = 2,
-                            RoomID = 2
-                        },
-                        new
-                        {
-                            ID = 3,
-                            AmenityID = 3,
-                            RoomID = 3
-                        });
                 });
 
             modelBuilder.Entity("Lab2_AysncInn.Models.HotelRoom", b =>
