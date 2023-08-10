@@ -119,28 +119,53 @@ namespace Lab2_AysncInn.Controller
         //PUT update the details of a specific room:
         [HttpPut]
         [Route("/api/Hotels/{hotelId}/Rooms/{roomID}")]
-        public async Task<ActionResult<HotelRoom>> PutUpdate(int hotelId, [FromQuery] int roomId, [FromBody] HotelRoom hotelRoom)
+        public async Task<IActionResult> UpdateHotelRoomInHotel(int hotelId, int roomId, [FromBody] HotelRoom updatedHotelRoom)
         {
+            // Find the hotel
             var hotel = await _context.Hotels.FindAsync(hotelId);
-            var room = await _context.Rooms.FindAsync(roomId);
-
             if (hotel == null)
             {
-                return NotFound($"Hotel with ID {hotelId} not found.");
+                return NotFound("Hotel not found");
             }
-            else if (room == null)
+
+            // Find the room within the hotel
+            var room = await _context.HotelRooms.FirstOrDefaultAsync(r => r.RoomID == roomId && r.HotelID == hotelId);
+            if (room == null)
             {
-                return NotFound();
+                return NotFound("Room not found");
             }
 
-            //hotelRoom.HotelID = hotelId;
 
-            HotelRoom NewHotelRoom = new HotelRoom() { HotelID = hotel.ID, RoomID = room.ID, Name = hotelRoom.Name, Price= hotelRoom.Price };
-            _context.HotelRooms.Add(NewHotelRoom);
-            await _context.SaveChangesAsync();
+            //////// Update the room with the new details
+            // room.Name = updatedHotelRoom.Name; // Update the properties as needed
+            if (room.Name != updatedHotelRoom.Name)
+            {
+                room.Name = updatedHotelRoom.Name;
+            }
+            if (room.Price != updatedHotelRoom.Price)
+            {
+                room.Price = updatedHotelRoom.Price;
 
-            return CreatedAtAction("AddRoomToHotel", new { id = NewHotelRoom.ID }, NewHotelRoom);
+            }
+            _context.Entry(room).State = EntityState.Modified;
 
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!HotelRoomExists(hotelId)) // You may need to modify this method to check both hotel and room IDs
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
 
@@ -209,6 +234,26 @@ namespace Lab2_AysncInn.Controller
 
             return NoContent();
         }
+
+        // new delete route to delete specifc hotel
+        [HttpDelete]
+        [Route("/api/Hotels/{hotelId}/Rooms/{roomID}")]
+        public async Task<IActionResult> DeleteSpecificRoom(int hotelId, int roomID)
+        {
+            var hotelRoom = await _context.HotelRooms.FirstOrDefaultAsync(r => r.HotelID == hotelId && r.RoomID == roomID);
+            if (hotelRoom == null)
+            {
+                return NotFound();
+            }
+
+            _context.HotelRooms.Remove(hotelRoom);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+
+        }
+
+
 
         private bool HotelRoomExists(int id)
         {
