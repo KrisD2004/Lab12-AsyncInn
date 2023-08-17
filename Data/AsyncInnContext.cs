@@ -1,15 +1,19 @@
 ﻿using Lab2_AysncInn.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Lab2_AysncInn.Data
 {
-    public class AsyncInnContext : DbContext
+    public class AsyncInnContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Amenity> Amenities { get; set; }
         public DbSet<RoomAmenity> RoomAmenities { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<HotelRoom> HotelRooms { get; set; }
         public DbSet<Hotel> Hotels { get; set; }
+        public DbSet<ApplicationUser> Users { get; set; }
+
 
         public AsyncInnContext(DbContextOptions<AsyncInnContext> options) : base(options)
         {
@@ -18,6 +22,10 @@ namespace Lab2_AysncInn.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // We need Identity to do its thing ...
+            base.OnModelCreating(modelBuilder);
+
+            // dummy data tables 
             modelBuilder.Entity<Amenity>().HasData(new Amenity
             { ID = 1, Name = "A/C" });
 
@@ -123,7 +131,8 @@ namespace Lab2_AysncInn.Data
                 Phone = "555-777-7777"
             });
 
-
+            SeedRole(modelBuilder, "Admin", "create", "update", "delete");
+            SeedRole(modelBuilder, " Editor", "create", "update");
 
         }
 
@@ -136,5 +145,32 @@ namespace Lab2_AysncInn.Data
         public DbSet<Lab2_AysncInn.Models.RoomAmenity> RoomAmenity { get; set; } = default!;
 
         public DbSet<Lab2_AysncInn.Models.Amenity> Amenity { get; set; } = default!;
+
+        private int nextId = 1;
+
+        private void SeedRole(ModelBuilder modelBuilder, string roleName, params string[] permissions)
+        {
+            var role = new IdentityRole
+            {
+                Id = roleName.ToLower(),
+                Name = roleName,
+                NormalizedName = roleName.ToUpper(),
+                ConcurrencyStamp = Guid.Empty.ToString()
+            };
+
+            modelBuilder.Entity<IdentityRole>().HasData(role);
+
+            // Go through the permissions list (the params) and seed a new entry for each
+            var roleClaims = permissions.Select(permission =>
+              new IdentityRoleClaim<string>
+              {
+                  Id = nextId++,
+                  RoleId = role.Id,
+                  ClaimType = "permissions", // This matches what we did in Startup.cs
+                  ClaimValue = permission
+              }).ToArray();
+
+            modelBuilder.Entity<IdentityRoleClaim<string>>().HasData(roleClaims);
+        }
     }
 }
