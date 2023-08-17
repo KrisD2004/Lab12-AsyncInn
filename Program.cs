@@ -1,6 +1,10 @@
-using Lab2_AysncInn.Data;
+﻿using Lab2_AysncInn.Data;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using Lab2_AysncInn.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Lab2_AysncInn
 {
@@ -17,6 +21,10 @@ namespace Lab2_AysncInn
                 o.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
             });
 
+            builder.Services.AddIdentityCore<ApplicationUser>()
+                .AddRoles<IdentityRole>()
+               .AddEntityFrameworkStores<AsyncInnContext>();
+
 
             builder.Services.AddSwaggerGen(options =>
             {
@@ -28,7 +36,30 @@ namespace Lab2_AysncInn
                 });
             });
 
-            builder.Services.AddDbContext<AsyncInnContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddDbContext<AsyncInnContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("LocalConnection"))); 
+            
+           /* builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                {
+                    // Tell the authenticaion scheme "how/where" to validate the token + secret
+                    options.TokenValidationParameters = JwtTokenService.GetValidationParameters(builder.Configuration);
+                });*/
+            
+            builder.Services.AddAuthorization(options =>
+            {
+                // Add "Name of Policy", and the Lambda returns a definition
+                options.AddPolicy("create", policy => policy.RequireClaim("permissions", "create"));
+                options.AddPolicy("update", policy => policy.RequireClaim("permissions", "update"));
+                options.AddPolicy("delete", policy => policy.RequireClaim("permissions", "delete"));
+            });
+
+            //builder.Services.AddIdentityCore<ApplicationUser>().AddEntityFrameworkStores<AsyncInnContext>();
+
 
             var app = builder.Build();
 
@@ -37,7 +68,8 @@ namespace Lab2_AysncInn
                 options.RouteTemplate = "/api/{documentName}/swagger.json";
             });
 
-            app.UseSwaggerUI(options => {
+            app.UseSwaggerUI(options =>
+            {
                 options.SwaggerEndpoint("/api/v1/swagger.json", "Student Demo");
                 options.RoutePrefix = "docs";
             });
